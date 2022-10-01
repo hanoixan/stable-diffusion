@@ -1,0 +1,2 @@
+prompt,skip_grid,skip_save,ddim_steps,ddim_eta,n_iter,H,W,strength,n_samples,n_rows,scale,from_file,seed,device,unet_bs,turbo,precision,format,sampler
+"man sitting, single person, cartoon, studio ghibli",False,False,40,0.0,1,512,512,0.55,1,0,7.5,,10,cuda,1,False,autocast,png,ddim
