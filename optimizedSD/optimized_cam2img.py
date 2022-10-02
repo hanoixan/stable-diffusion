@@ -206,7 +206,7 @@ parser.add_argument(
     "--sampler",
     type=str,
     help="sampler",
-    choices=["ddim"],
+    choices=["plms", "ddim", "euler", "euler_a", "dpm2", "heun", "dpm2_a", "lms"],
     default="ddim",
 )
 opt = parser.parse_args()
@@ -291,7 +291,7 @@ else:
     print ("Cuda is NOT available")
 
 # create opencv capture device
-vid = cv2.VideoCapture(0)
+vid = cv2.VideoCapture(1)
 
 
 while True:
@@ -305,15 +305,11 @@ while True:
     init_image = repeat(init_image, "1 ... -> b ...", b=batch_size)
     init_latent = modelFS.get_first_stage_encoding(modelFS.encode_first_stage(init_image))  # move to latent space
 
-
-
-
-
-    if opt.device != "cpu":
-        mem = torch.cuda.memory_allocated(device=opt.device) / 1e6
-        modelFS.to("cpu")
-        while torch.cuda.memory_allocated(device=opt.device) / 1e6 >= mem:
-            time.sleep(1)
+    # if opt.device != "cpu":
+    #     mem = torch.cuda.memory_allocated(device=opt.device) / 1e6
+    #     modelFS.to("cpu")
+    #     while torch.cuda.memory_allocated(device=opt.device) / 1e6 >= mem:
+    #         time.sleep(1)
 
 
     assert 0.0 <= opt.strength <= 1.0, "can only work with strength in [0.0, 1.0]"
@@ -358,11 +354,11 @@ while True:
                     else:
                         c = modelCS.get_learned_conditioning(prompts)
 
-                    if opt.device != "cpu":
-                        mem = torch.cuda.memory_allocated(device=opt.device) / 1e6
-                        modelCS.to("cpu")
-                        while torch.cuda.memory_allocated(device=opt.device) / 1e6 >= mem:
-                            time.sleep(1)
+                    # if opt.device != "cpu":
+                    #     mem = torch.cuda.memory_allocated(device=opt.device) / 1e6
+                    #     modelCS.to("cpu")
+                    #     while torch.cuda.memory_allocated(device=opt.device) / 1e6 >= mem:
+                    #         time.sleep(1)
 
                     # encode (scaled latent)
 
@@ -387,8 +383,8 @@ while True:
                         sampler = opt.sampler
                     )
 
-                    print("model to device")
-                    modelFS.to(opt.device)
+                    # print("model to device")
+                    # modelFS.to(opt.device)
 
                     print("saving images")
                     for i in range(batch_size):
@@ -396,9 +392,6 @@ while True:
                         x_samples_ddim = modelFS.decode_first_stage(samples_ddim[i].unsqueeze(0))
                         x_sample = torch.clamp((x_samples_ddim + 1.0) / 2.0, min=0.0, max=1.0)
                         x_sample = 255.0 * rearrange(x_sample[0].cpu().numpy(), "c h w -> h w c")
-
-
-                        # Todo: show image in OpenCV
 
                         # Image.fromarray(x_sample.astype(np.uint8)).save(
                         #     os.path.join(sample_path, "seed_" + str(opt.seed) + "_" + f"{base_count:05}.{opt.format}")

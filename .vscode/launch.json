@@ -1,7 +1,4 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
         {
@@ -11,13 +8,32 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "args": [
-                "--W", "512", "--H", "512",
-                "--strength", "0.55", "--n_iter", "1", "--n_samples", "1",
-                "--ddim_steps", "40", "--seed", "10",
-                "--prompt", "man sitting, single person, cartoon, studio ghibli",
-                //"--scale", "0.1", 
-            ],
-            //"justMyCode": true
+                "--W",
+                "512",
+                "--H",
+                "512",
+                "--sampler",
+                "ddim",
+                "--strength",
+                "0.7",
+                "--n_iter",
+                "1",
+                "--n_samples",
+                "1",
+                "--ddim_steps",
+                "20",
+                "--seed",
+                "1",
+                "--prompt",
+                "a portrait of a very handsome man, cinematic lighting, highly detailed, professional photoshoot, fog around, volumetric light, amazing crisp 8K detail no noise, DOF"
+            ]
+        },
+        {
+            "name": "Dynamic Python: File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "justMyCode": true
         }
     ]
 }

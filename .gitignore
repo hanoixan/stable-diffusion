@@ -1,0 +1,6 @@
+
+*.pyc
+logs/cam2img_logs.csv
+models/ldm/stable-diffusion-v1/model.ckpt
+src/clip/
+src/taming-transformers/
